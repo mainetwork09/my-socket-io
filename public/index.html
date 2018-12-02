@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <title>test</title>
+  </head>
+  <body>
+
+    <form action="">
+      <input type="text" id="m">
+      <button type="submit">send</button>
+    </form>
+
+    <ul id="messages"></ul>
+    
+
+  <script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
+  <script src="/socket.io/socket.io.js"></script> 
+  <script>
+    var socket = io();
+    $('form').submit(function(){
+      socket.emit('new-message', $('#m').val());
+      $('#m').val('');
+      return false;
+    });
+    socket.on('connection', function(){
+      socket.emit('setUser', $('.usernameInput').val().trim());
+    });
+    socket.on('chatMessage', function(msg){
+      $('#messages').append($('<li>').text(msg));
+    });
+    socket.on('newUser', function(data){
+      $('#newUserMessage').text(data);
+    });        
+  </script>
+  </body>
+</html>
